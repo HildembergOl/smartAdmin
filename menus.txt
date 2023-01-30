@@ -1,0 +1,37 @@
+const permission: any[] = [
+        {
+            item: 'Dashboards',
+            subItem: [{ title: 'Dashboard', src: 'dashboard' }],
+        },
+        {
+            item: 'Cadastros',
+            subItem: [
+                { title: 'Pessoas', src: 'person' },
+                { title: 'Veículos', src: 'vehicles' },
+            ],
+        },
+        {
+            item: 'Compras',
+            subItem: [{ title: 'Dashboard', src: 'dashboard' }],
+        },
+        {
+            item: 'Pedidos',
+            subItem: [{ title: 'Dashboard', src: 'dashboard' }],
+        },
+        {
+            item: 'Documentos Fiscais',
+            subItem: [{ title: 'Dashboard', src: 'dashboard' }],
+        },
+        {
+            item: 'Financeiro',
+            subItem: [{ title: 'Dashboard', src: 'dashboard' }],
+        },
+        {
+            item: 'Patrimonial',
+            subItem: [{ title: 'Dashboard', src: 'dashboard' }],
+        },
+        {
+            item: 'Relatórios',
+            subItem: [{ title: 'Dashboard', src: 'dashboard' }],
+        },
+    ]

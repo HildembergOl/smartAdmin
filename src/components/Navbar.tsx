@@ -11,16 +11,16 @@ export function Navbar() {
 
     const { state } = useContext(Context)
     return (
-        <nav className="rounded-br-md bg-slate-600 shadow-lg">
-            <div className="mx-auto px-2">
-                <div className="relative flex h-16 w-full items-center justify-between">
+        <nav className="w-full rounded-br-md bg-slate-700 shadow-lg  ">
+            <div className="mx-auto px-4 ">
+                <div className="relative flex h-16 items-center justify-between">
                     <HamburguerMenu />
                     <img
-                        className="block h-8 w-auto"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                        className="m-1 block h-24 w-auto"
+                        src="../../public/icons/logo.png"
                         alt="Your Company"
                     />
-                    <div className="h-auto w-auto p-2 text-xs font-bold text-slate-300">
+                    <div className="h-auto w-auto break-all p-2 text-xs font-bold text-slate-300">
                         <p>Usuário: {state.user.user}</p>
                         <p>Data: {dateFormated}</p>
                         <p>Versão: {state.system.version}</p>

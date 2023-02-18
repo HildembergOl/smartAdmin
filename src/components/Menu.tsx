@@ -2,10 +2,15 @@ import { useContext, useState } from 'react'
 import { Context } from '../contexts'
 import { MenuItem } from './MenuItem'
 
-export function Menu() {
-    type PropsPermission = { id: number; menu: string; img: string }
+type MenuProps = { idMenu: number }
+type PermissionItem = {
+    id: number
+    menu: string
+    img: string
+}
 
-    const permissionItem: PropsPermission[] = [
+export function Menu({ idMenu }: MenuProps) {
+    const permissionItem: PermissionItem[] = [
         { id: 1, menu: 'Dashboard', img: 'dashboard' },
         { id: 2, menu: 'Cadastros', img: 'cadastro' },
         { id: 3, menu: 'Compras', img: 'compras' },
@@ -18,44 +23,48 @@ export function Menu() {
     ]
     const { state } = useContext(Context)
 
-    const [stateMenu, dispachMenu] = useState(true)
+    const [stateMenu, dispatchMenu] = useState(false)
 
-    // const classUL = `pt-6`
-    // const classImg = `p-1`
-    // classDiv = `bg1`
-    return (
-        <>
-            {permissionItem.map((data) => {
-                return (
-                    <div key={`1${data.id}`}>
-                        <div
-                            className="relative flex flex-row py-4 pl-6 hover:bg-gray-600"
-                            key={`2${data.id}`}
-                            aria-hidden="true"
-                        >
-                            <img
-                                className="h-8 w-auto"
-                                key={`3${data.id}`}
-                                src={`../../public/${data.img}.png`}
-                                alt=""
-                            />
-                            <div
-                                className={`${
-                                    !state.sidebar.sidebarOpen && 'hidden'
-                                } max-w-full origin-left cursor-pointer rounded-md pl-2 text-base font-semibold text-gray-300 duration-200`}
-                                onClick={() => {
-                                    dispachMenu(!stateMenu)
-                                }}
-                                aria-hidden="true"
-                                key={`4${data.id}`}
-                            >
-                                {data.menu}
-                            </div>
-                        </div>
-                        <MenuItem stateMenu={stateMenu}>{data.id}</MenuItem>
-                    </div>
-                )
-            })}
-        </>
+    const handleClickMenu = () => {
+        dispatchMenu(!stateMenu)
+    }
+    const menu = permissionItem.find((p) => (p.id === idMenu ? p : false))
+
+    return !menu ? (
+        <div className="hidden" />
+    ) : (
+        <div key={`0${idMenu}`}>
+            <div
+                className="hover: relative flex cursor-pointer flex-row items-center py-4 pl-4 hover:rounded-r-2xl hover:bg-zinc-500"
+                key={`1${idMenu}`}
+                onClick={handleClickMenu}
+                aria-hidden="true"
+            >
+                <img
+                    className="h-5 w-auto cursor-pointer"
+                    key={`2${idMenu}`}
+                    src={`../../public/icons/${menu?.img}.png`}
+                    alt=""
+                />
+                <div
+                    className={`${
+                        !state.sidebar.sidebarOpen && 'hidden'
+                    } w-full origin-left cursor-pointer rounded-md pl-2 text-sm font-medium text-gray-300 duration-200`}
+                    aria-hidden="true"
+                    key={`3${idMenu}`}
+                >
+                    {menu?.menu}
+                </div>
+            </div>
+            <ul
+                className={`${
+                    (!stateMenu && 'hidden') ||
+                    (!state.sidebar.sidebarOpen && 'hidden')
+                } max-w-full flex-none origin-left flex-col pl-8`}
+                key={`4${menu?.id}`}
+            >
+                <MenuItem key={`5${idMenu}`}>{idMenu}</MenuItem>
+            </ul>
+        </div>
     )
 }

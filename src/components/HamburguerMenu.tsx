@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { Context } from '../contexts'
 
 export function HamburguerMenu() {
-    const genericHamburgerLine = `h-1 w-6 my-1 rounded-full bg-slate-300 transition ease transform duration-300`
+    const genericHamburgerLine = `h-2 w-full rounded bg-slate-300 transition ease transform duration-300`
 
     const { state, dispatch } = useContext(Context)
 
@@ -17,19 +17,19 @@ export function HamburguerMenu() {
     }
     return (
         <div
-            className="group flex h-8 w-8 flex-col items-center rounded"
+            className="group flex h-5 w-6 flex-col items-center rounded"
             onClick={handleClick}
             aria-hidden="true"
         >
             <div
                 className={`${genericHamburgerLine} ${
                     state.sidebar.sidebarOpen
-                        ? 'translate-x-3 rotate-180 opacity-50 group-hover:opacity-100'
+                        ? 'm-0 translate-x-3 rotate-180 opacity-50 group-hover:opacity-100'
                         : 'opacity-50 group-hover:opacity-100'
                 }`}
             />
             <div
-                className={`${genericHamburgerLine} ${
+                className={`my-[0.3rem] ${genericHamburgerLine} ${
                     state.sidebar.sidebarOpen
                         ? 'opacity-100'
                         : 'opacity-50 group-hover:opacity-100'
@@ -38,7 +38,7 @@ export function HamburguerMenu() {
             <div
                 className={`${genericHamburgerLine} ${
                     state.sidebar.sidebarOpen
-                        ? 'translate-x-3 -rotate-180 opacity-50 group-hover:opacity-100'
+                        ? 'm-0 translate-x-3 -rotate-180 opacity-50 group-hover:opacity-100'
                         : 'opacity-50 group-hover:opacity-100'
                 }`}
             />

@@ -1,11 +1,11 @@
-import { Navbar } from '../components/Navbar'
-import { Sidebar } from '../components/Sidebar'
+import { MainPage } from '../components/MainPage'
+import * as dataApiBusiness from '../api/DataBusiness.json'
 
 export function Home() {
-    return (
-        <div>
-            <Navbar />
-            <Sidebar />
-        </div>
-    )
+    const dash = dataApiBusiness.dashboard
+    // const data = dataApiBusiness.table
+    // const perm = dataApiBusiness.businessPermition
+    // eslint-disable-next-line no-console
+    console.log(Object.getOwnPropertyNames(dash))
+    return <MainPage> ... </MainPage>
 }

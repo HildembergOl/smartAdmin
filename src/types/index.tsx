@@ -5,6 +5,7 @@ export type SystemTypes = { version: string; date: string }
 export type SidebarType = {
     sidebarOpen: boolean
 }
+export type ThemeTypes = { theme: string }
 export type ContextType = {
     state: InitialStateType
     dispatch: React.Dispatch<any>
@@ -13,4 +14,7 @@ export type InitialStateType = {
     user: UserType
     sidebar: SidebarType
     system: SystemTypes
+}
+export type InitialThemeType = {
+    theme: ThemeTypes
 }

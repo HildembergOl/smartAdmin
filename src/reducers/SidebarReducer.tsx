@@ -1,7 +1,7 @@
 import { ActionType, SidebarType } from '../types'
 
 export const sidebarInitialState: SidebarType = {
-    sidebarOpen: true,
+    sidebarOpen: false,
 }
 export const sidebarReducer = (state: SidebarType, action: ActionType) => {
     switch (action.type) {
@@ -9,7 +9,6 @@ export const sidebarReducer = (state: SidebarType, action: ActionType) => {
             return {
                 ...state,
                 sidebarOpen: action.payload.sidebar,
-                menuOpen: action.payload.menu,
             }
         default:
             return state

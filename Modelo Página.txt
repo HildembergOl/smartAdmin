@@ -1,0 +1,35 @@
+Vermelho: #e8564a
+
+Verde: #39ccb9
+
+Amarelo: #e9c460
+
+Azul: #5e96ec
+
+Fonte: Roboto Condensed
+
+<body>
+	<div>
+	    Barra de Progresso 
+	</div>
+	<wrapper> Toda a Tela
+		<header>
+			Barra de Cima
+		</header>
+		<aside>
+			Barra Lateral
+		</aside>
+		<div> 
+			Conteúdo da página
+		</div>
+		<footer>
+			Barra de baixo
+		</footer>
+		<modal>
+			Modal de Confirmação
+		</modal>
+		<modal>
+			Modal de Alerta
+		</modal>		
+	</wrapper>
+</body>

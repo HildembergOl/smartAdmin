@@ -7,13 +7,23 @@ export function Sidebar() {
 
     return (
         <aside
-            key="_"
-            className={`flex w-72 ${
-                state.sidebar.sidebarOpen ? 'w-72' : 'w-20'
-            } flex h-screen flex-col rounded-r-2xl bg-slate-500 shadow-lg`}
+            className={`flex ${
+                state.sidebar.sidebarOpen ? 'w-60' : 'w-16'
+            } flex h-full items-center overflow-y-auto rounded-r-2xl bg-zinc-700  shadow-lg  `}
+            key="aside"
             aria-hidden="true"
         >
-            <Menu />
+            <div className="h-full w-full flex-wrap items-center justify-between">
+                <Menu idMenu={1} />
+                <Menu idMenu={2} />
+                <Menu idMenu={3} />
+                <Menu idMenu={4} />
+                <Menu idMenu={5} />
+                <Menu idMenu={6} />
+                <Menu idMenu={7} />
+                <Menu idMenu={8} />
+                <Menu idMenu={9} />
+            </div>
         </aside>
     )
 }

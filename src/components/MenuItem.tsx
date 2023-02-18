@@ -1,37 +1,43 @@
-import { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { Context } from '../contexts'
 
-type PropsChildren = { children: number; stateMenu: boolean }
+type PropsChildren = { children: number }
 
-export function MenuItem({ children, stateMenu }: PropsChildren) {
+export function MenuItem({ children }: PropsChildren) {
     const PermissionItemMenu = [
-        { id: 1, idMenu: 1, title: 'Dashboard', src: 'dashboard' },
-        { id: 2, idMenu: 1, title: 'Dashboard2', src: 'dashboard2' },
-        { id: 3, idMenu: 2, title: 'Dashboard2', src: 'dashboard2' },
+        { id: 1, idMenu: 1, title: 'Dashboard', src: '' },
+        { id: 2, idMenu: 2, title: 'Pessoas', src: 'person' },
+        { id: 3, idMenu: 2, title: 'Usuários', src: 'user' },
+        { id: 4, idMenu: 2, title: 'Empresas', src: 'business' },
     ]
-    const { state } = useContext(Context)
 
     return (
-        <ul
-            className={`${
-                (!stateMenu || !state.sidebar.sidebarOpen) && 'hidden'
-            } max-w-full flex-none origin-left flex-col pl-16`}
-            key={children}
-        >
+        <>
             {PermissionItemMenu.map((data) => {
                 if (data.idMenu === children) {
                     return (
-                        <li
-                            className={`text-sm font-semibold hover:bg-slate-100 hover:text-slate-900 `}
-                            key={`6${data.id}`}
+                        <Link
+                            to={`/${data.src}`}
+                            key={`link_${data.id}_${data.idMenu}`}
+                            className="flex w-full flex-row justify-center"
+                            replace
                         >
-                            <Link to={data.src}>{data.title}</Link>
-                        </li>
+                            <img
+                                src="../../public/icons/arrow.png"
+                                alt="arrow"
+                                className="h-5 w-auto"
+                                key={`arrow_${data.id}_${data.idMenu}`}
+                            />
+                            <li
+                                className={`w-full py-[2px] pl-1 text-sm font-semibold text-zinc-400 hover:bg-slate-300 hover:font-bold hover:text-slate-900 `}
+                                key={`${data.id}_${data.idMenu}`}
+                            >
+                                {data.title}
+                            </li>
+                        </Link>
                     )
                 }
-                return <li key={`8${data.id}`} />
+                return null
             })}
-        </ul>
+        </>
     )
 }

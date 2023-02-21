@@ -11,7 +11,6 @@ module.exports = {
             },
         },
         fontFamily: {
-            poppins: ['Poppins', 'sancs-serif'],
             roboto: ['Roboto', 'sans-serif'],
         },
     },

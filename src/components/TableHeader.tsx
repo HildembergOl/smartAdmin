@@ -1,17 +1,13 @@
 type PropsValue = { value: string }
 type PropsTable = { children: React.ReactNode }
-type PropsTableArea = { children: React.ReactNode; visible: true }
+type PropsTableArea = { children: React.ReactNode; visible: boolean }
 
 export function TableHeaderRowValue({ value }: PropsValue) {
-    return <th className="table-cell">{value}</th>
+    return <th className="table-cell p-4">{value}</th>
 }
 
 export function TableHeaderRow({ children }: PropsTable) {
-    return (
-        <tr className="table-row text-sm max-sm:text-[0.6rem] max-sm:font-normal">
-            {children}
-        </tr>
-    )
+    return <tr className="table-row text-sm ">{children}</tr>
 }
 
 export function TableHeader({ children }: PropsTable) {
@@ -22,12 +18,14 @@ export function TableHeader({ children }: PropsTable) {
 
 export function TableArea({ children, visible }: PropsTableArea) {
     return (
-        <table
-            className={`${
-                visible ? '' : 'hidden'
-            } table h-auto w-full overflow-x-auto bg-slate-300`}
-        >
-            {children}
-        </table>
+        <div className="mb-3 flex h-full w-full flex-col overflow-auto">
+            <table
+                className={`${
+                    visible ? '' : 'hidden'
+                } table w-full bg-slate-300 p-2`}
+            >
+                {children}
+            </table>
+        </div>
     )
 }

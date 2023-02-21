@@ -31,11 +31,11 @@ export function Menu({ idMenu }: MenuProps) {
     const menu = permissionItem.find((p) => (p.id === idMenu ? p : false))
 
     return !menu ? (
-        <div className="hidden" />
+        <div className="hidden min-w-min" />
     ) : (
         <div key={`0${idMenu}`}>
             <div
-                className="hover: relative flex cursor-pointer flex-row items-center py-4 pl-4 hover:rounded-r-2xl hover:bg-zinc-500"
+                className="hover: relative flex min-w-min cursor-pointer flex-row items-center py-4 pr-3 pl-4 hover:rounded-r-2xl hover:bg-zinc-500"
                 key={`1${idMenu}`}
                 onClick={handleClickMenu}
                 aria-hidden="true"
@@ -49,7 +49,7 @@ export function Menu({ idMenu }: MenuProps) {
                 <div
                     className={`${
                         !state.sidebar.sidebarOpen && 'hidden'
-                    } w-full origin-left cursor-pointer rounded-md pl-2 text-sm font-medium text-gray-300 duration-200`}
+                    } w-full origin-left cursor-pointer rounded-md pl-2 pr-7 text-sm font-medium text-gray-300 duration-200`}
                     aria-hidden="true"
                     key={`3${idMenu}`}
                 >

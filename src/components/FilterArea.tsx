@@ -29,7 +29,7 @@ export function FilterArea({ children }: PropsChildren) {
             <div
                 className={`${
                     hiddenFilter ? 'hidden' : false
-                } flex h-auto w-full flex-row rounded-md bg-slate-400 shadow-sm transition-shadow duration-700 ease-in-out max-sm:flex-col`}
+                } ease mb-2 flex h-auto w-[25vw] flex-row rounded-md bg-slate-400 px-3 py-2 shadow-sm transition-shadow duration-700 max-sm:w-full max-sm:flex-col`}
             >
                 {children}
             </div>

@@ -2,10 +2,10 @@
     "businessPermition": { "visible": true, "id": 25 },
     "dashboard": {
         "visible": true,
-        "all": { "name": "Empresas", "value": "100 Cadastros" },
-        "active": { "name": "Ativos", "value": "78 Ativos" },
-        "inactive": { "name": "Inativos", "value": "10 Inativos" },
-        "atention": { "name": "Bloqueados", "value": "2 Bloqueados" }
+        "all": { "name": "Empresas", "value": "100" },
+        "active": { "name": "Ativos", "value": "78" },
+        "inactive": { "name": "Inativos", "value": "10" },
+        "atention": { "name": "Bloqueados", "value": "2" }
     },
     "table": [
         {

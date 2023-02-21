@@ -1,4 +1,5 @@
 import { Navigate } from 'react-router-dom'
+import { MainPage } from '../components/MainPage'
 
 type Props = {
     children: JSX.Element
@@ -7,5 +8,9 @@ type Props = {
 export function RequireAuth({ children }: Props) {
     const isAuth = true
 
-    return isAuth ? children : <Navigate to="login" />
+    return isAuth ? (
+        <MainPage>{children}</MainPage>
+    ) : (
+        <Navigate to="/auth/login" />
+    )
 }

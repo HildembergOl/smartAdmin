@@ -19,7 +19,7 @@ export function DashPage({ visible, all, active, inactive, atention }: Props) {
             id="dasboard"
             className={`${
                 visible ? '' : 'hidden'
-            } m-auto flex h-auto w-full flex-row items-center justify-between bg-transparent p-1`}
+            } flex h-auto w-full flex-row items-center justify-between bg-transparent`}
         >
             <Card name={allName} value={allValue} color="bg-card-all" />
             <Card

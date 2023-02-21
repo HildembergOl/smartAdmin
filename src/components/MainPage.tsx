@@ -5,17 +5,17 @@ type PropsChildren = { children: React.ReactNode }
 
 export function MainPage({ children }: PropsChildren) {
     return (
-        <div id="MainPage" className="m-0 p-0 ">
+        <div
+            id="MainPage"
+            className="fixed m-0 flex h-screen w-screen flex-col p-0 "
+        >
             <Navbar />
             <div
                 id="MiddlePage"
-                className="flex h-[calc(100vh-4rem)] w-full items-start bg-slate-200"
+                className="flex h-full max-h-[calc(100%-4rem)] w-full max-w-full flex-row bg-slate-200"
             >
                 <Sidebar />
-                <div
-                    id="RightSide"
-                    className="m-1 flex w-full flex-col break-all"
-                >
+                <div id="RightSide" className="flex h-full w-full flex-col p-3">
                     {children}
                 </div>
             </div>

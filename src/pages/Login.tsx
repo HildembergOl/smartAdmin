@@ -6,10 +6,10 @@ export function Login() {
                 <div>
                     <img
                         className="mx-auto h-12 w-auto"
-                        src="https://lh5.ggpht.com/j1ApuLH0mpiIVUjn8yNjBhEyom0btQM7uky4W7da9lPQBaobEf6UcHyOmjAWCs_thOlY=w300"
+                        src="../../public/icons/logo.png"
                         alt="Smart Admin Logo"
                     />
-                    <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+                    <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-sky-600">
                         Entre na sua conta
                     </h2>
                 </div>

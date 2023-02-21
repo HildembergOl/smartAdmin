@@ -1,15 +1,17 @@
-import { Routes, Route } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { Business } from '../pages/Business'
 import { Home } from '../pages/Home'
-import { Login } from '../pages/Login'
 import { NotFound } from '../pages/NotFound'
 import { Person } from '../pages/Person'
 import { User } from '../pages/User'
 import { RequireAuth } from '../services/RequireAuth'
+import { Modal } from '../pages/Modal'
+import { Login } from '../pages/Login'
 
 export function RoutesApp() {
     return (
         <Routes>
+            <Route path="auth/login" element={<Login />} />
             <Route
                 path="/"
                 element={
@@ -18,11 +20,54 @@ export function RoutesApp() {
                     </RequireAuth>
                 }
             />
-            <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<Home />} />
-            <Route path="/person" element={<Person />} />
-            <Route path="/user" element={<User />} />
-            <Route path="/business" element={<Business />} />
+            <Route
+                path="/dashboard"
+                element={
+                    <RequireAuth>
+                        <Home />
+                    </RequireAuth>
+                }
+            />
+            <Route
+                path="/person"
+                element={
+                    <RequireAuth>
+                        <Person />
+                    </RequireAuth>
+                }
+            />
+            <Route
+                path="/user"
+                element={
+                    <RequireAuth>
+                        <User />
+                    </RequireAuth>
+                }
+            />
+            <Route
+                path="/business"
+                element={
+                    <RequireAuth>
+                        <Business />
+                    </RequireAuth>
+                }
+            />
+            <Route
+                path="/:page/new"
+                element={
+                    <RequireAuth>
+                        <Modal />
+                    </RequireAuth>
+                }
+            />
+            <Route
+                path="/:page/edit/:id"
+                element={
+                    <RequireAuth>
+                        <Modal />
+                    </RequireAuth>
+                }
+            />
             <Route path="*" element={<NotFound />} />
         </Routes>
     )

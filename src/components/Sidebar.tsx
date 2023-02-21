@@ -8,12 +8,14 @@ export function Sidebar() {
     return (
         <aside
             className={`flex ${
-                state.sidebar.sidebarOpen ? 'w-60' : 'w-16'
-            } flex h-full items-center overflow-y-auto rounded-r-2xl bg-zinc-700  shadow-lg  `}
+                state.sidebar.sidebarOpen
+                    ? 'w-60 min-w-[15rem] max-sm:w-full'
+                    : 'w-16 min-w-[4rem] max-sm:hidden'
+            } flex h-full items-center overflow-y-auto rounded-r-2xl bg-zinc-700 shadow-lg`}
             key="aside"
-            aria-hidden="true"
+            aria-hidden="false"
         >
-            <div className="h-full w-full flex-wrap items-center justify-between">
+            <div className="h-full w-full items-center justify-between">
                 <Menu idMenu={1} />
                 <Menu idMenu={2} />
                 <Menu idMenu={3} />

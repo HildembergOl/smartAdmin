@@ -1,12 +1,11 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useCallback, useEffect, useState } from 'react'
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { SetStateAction, useCallback, useEffect, useState } from 'react'
 import { DashPage } from '../components/DashPage'
-import { MainPage } from '../components/MainPage'
 import {
     TableBody,
     TableBodyRow,
     TableBodyRowValue,
+    ButtonActionsArea,
 } from '../components/TableBody'
 import {
     TableArea,
@@ -17,47 +16,54 @@ import {
 import * as dataApiBusiness from '../api/DataBusiness.json'
 import { FilterArea } from '../components/FilterArea'
 import { LabelFilterText } from '../components/LabelsFilter'
+import { ButtonNew } from '../components/Button'
+
+let searchTimer: NodeJS.Timeout
 
 export function Business() {
     const dash = dataApiBusiness.dashboard
     const apiData = dataApiBusiness.table
     const perm = dataApiBusiness.businessPermition
 
-    const [filter, setFilter] = useState('')
     const [data, setData] = useState(apiData)
+    const [filter, setFilter] = useState('')
+
     const params = Object.getOwnPropertyNames(apiData[0])
     const [searchParams] = useState(params)
 
     const searchData = useCallback(
-        (items: any[]) => {
-            console.log(items)
-            return items.filter((item) => {
-                console.log(item)
-                return searchParams.forEach((newItem) => {
-                    console.log({ newItem, searchParams })
-                    return console.log(
+        (v: { toString: () => string }) => {
+            return apiData.filter((item) => {
+                return searchParams.some((newItem) => {
+                    return (
+                        // @ts-ignore
                         item[newItem]
-                            .toString()
-                            .toLowerCase()
-                            .includes(filter.toString().toLowerCase())
+                            ?.toString()
+                            ?.toLowerCase()
+                            ?.indexOf(v.toString().toLowerCase()) > -1
                     )
                 })
             })
         },
-        [filter, searchParams]
+        [apiData, searchParams]
     )
 
-    const onChangeValues = (e: { target: { value: any } }) => {
+    const onChangeValues = (e: {
+        target: { value: SetStateAction<string> }
+    }) => {
         setFilter(e.target.value)
-        console.log(e.target.value)
     }
+
     useEffect(() => {
-        setData(searchData(apiData))
-        console.log(searchData)
-    }, [apiData, searchData])
+        clearTimeout(searchTimer)
+        searchTimer = setTimeout(() => {
+            const filtered = searchData(filter)
+            setData(filtered)
+        }, 2000)
+    }, [filter, searchData])
 
     return (
-        <MainPage>
+        <>
             <DashPage
                 visible={dash.visible}
                 all={dash.all}
@@ -68,14 +74,16 @@ export function Business() {
             <FilterArea>
                 <LabelFilterText
                     id="business"
-                    name="Descrição"
+                    name="Pesquisar"
                     type="text"
                     onChangeValue={onChangeValues}
                 />
             </FilterArea>
+            <ButtonNew />
             <TableArea visible>
                 <TableHeader>
                     <TableHeaderRow>
+                        <TableHeaderRowValue value="Ações" />
                         <TableHeaderRowValue value="Código" />
                         <TableHeaderRowValue value="Tipo" />
                         <TableHeaderRowValue value="Empresa" />
@@ -92,6 +100,7 @@ export function Business() {
                                 rowId={item.id}
                                 key={`${perm.id}-table-row-${item.id}`}
                             >
+                                <ButtonActionsArea id={item.id} />
                                 <TableBodyRowValue
                                     key={`${perm.id}-table-row-col-1-${item.id}`}
                                     value={item.id}
@@ -125,6 +134,6 @@ export function Business() {
                     })}
                 </TableBody>
             </TableArea>
-        </MainPage>
+        </>
     )
 }

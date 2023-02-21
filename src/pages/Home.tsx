@@ -1,4 +1,3 @@
-import { MainPage } from '../components/MainPage'
 import * as dataApiBusiness from '../api/DataBusiness.json'
 
 export function Home() {
@@ -7,5 +6,5 @@ export function Home() {
     // const perm = dataApiBusiness.businessPermition
     // eslint-disable-next-line no-console
     console.log(Object.getOwnPropertyNames(dash))
-    return <MainPage> ... </MainPage>
+    return <span>...</span>
 }

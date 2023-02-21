@@ -2,7 +2,8 @@ import { ActionType, SystemTypes } from '../types'
 
 export const systemInitialState: SystemTypes = {
     version: '1.0.0',
-    date: '',
+    idBusiness: 1,
+    business: 'Mix Logistica Integrada',
 }
 export const systemReducer = (state: SystemTypes, action: ActionType) => {
     switch (action.type) {
@@ -12,10 +13,11 @@ export const systemReducer = (state: SystemTypes, action: ActionType) => {
                 version: action.payload.version,
             }
             break
-        case 'CHANGE_DATE':
+        case 'CHANGE_BUSINESS':
             return {
                 ...state,
-                date: action.payload.date,
+                idBusiness: action.payload.idBusiness,
+                business: action.payload.business,
             }
             break
         default:

@@ -3,27 +3,26 @@ import { Context } from '../contexts'
 import { HamburguerMenu } from './HamburguerMenu'
 
 export function Navbar() {
-    const date: Date = new Date()
-    const year: string = date.getFullYear().toString()
-    const month: string = (date.getMonth() + 1).toString().padStart(2, '0')
-    const day: string = date.getDate().toString().padStart(2, '0')
-    const dateFormated = `${day}/${month}/${year}`
-
     const { state } = useContext(Context)
     return (
-        <nav className="w-full rounded-br-md bg-slate-700 shadow-lg  ">
-            <div className="mx-auto px-4 ">
-                <div className="relative flex h-16 items-center justify-between">
+        <nav className="h-16 w-full rounded-br-md bg-slate-700 shadow-lg  ">
+            <div className="mx-auto h-auto w-full px-4 ">
+                <div className="flex h-16 items-center justify-between">
                     <HamburguerMenu />
                     <img
-                        className="m-1 block h-24 w-auto"
+                        className="my-auto h-11 w-auto"
                         src="../../public/icons/logo.png"
-                        alt="Your Company"
+                        alt="Smart Admin"
                     />
-                    <div className="h-auto w-auto break-all p-2 text-xs font-bold text-slate-300">
+                    <div className="my-auto flex h-11 w-auto flex-col items-start justify-center p-2 text-xs font-semibold text-slate-300">
+                        <p>
+                            Código:{' '}
+                            {state.system.idBusiness
+                                .toString()
+                                .padStart(5, '0')}
+                        </p>
+                        <p>Empresa: {state.system.business}</p>
                         <p>Usuário: {state.user.user}</p>
-                        <p>Data: {dateFormated}</p>
-                        <p>Versão: {state.system.version}</p>
                     </div>
                 </div>
             </div>

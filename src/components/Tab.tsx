@@ -37,11 +37,11 @@ export function Tab({ children, id, handleClick, select }: PropsTab) {
 export function TabArea({ children, data, select, page }: PropsTabArea) {
     console.log(data)
     return (
-        <div className="mt-8 flex h-full w-full flex-col items-start justify-start  rounded-md  border-[1px] border-slate-400 bg-slate-300 shadow-md">
+        <div className="mt-8 flex h-full w-full flex-col items-start justify-start rounded-md border-[1px] border-slate-400 bg-slate-300 shadow-md">
             <div className="flex h-auto w-auto flex-row items-start justify-start">
                 {children}
             </div>
-            <div className=" flex h-full w-full flex-row items-start justify-start">
+            <div className="flex flex-row flex-wrap">
                 {data.map(
                     useCallback(
                         (k) => {

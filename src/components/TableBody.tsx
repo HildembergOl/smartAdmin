@@ -4,9 +4,13 @@ type PropsValue = { value: string | number }
 type PropsTable = { children: React.ReactNode }
 type PropsTableRow = {
     children: React.ReactNode
-    rowId: number
+    rowId: number | string
 }
-type PropsButtonAction = { id: number }
+type PropsButtonAction = {
+    id: number
+    onClickEdit: (e: number) => void
+    onClickDelete: (e: number) => void
+}
 
 export function TableBodyRowValue({ value }: PropsValue) {
     return <th className="table-cell cursor-pointer p-4">{value}</th>
@@ -25,18 +29,22 @@ export function TableBodyRow({ children, rowId }: PropsTableRow) {
 
 export function TableBody({ children }: PropsTable) {
     return (
-        <tbody className="table-row-group overflow-auto bg-slate-200 font-normal text-gray-600 max-sm:text-[0.5rem]  max-sm:font-normal">
+        <tbody className="table-row-group overflow-x-auto bg-slate-200 font-normal text-gray-600 max-sm:text-[0.5rem]  max-sm:font-normal">
             {children}
         </tbody>
     )
 }
 
-export function ButtonActionsArea({ id }: PropsButtonAction) {
+export function ButtonActionsArea({
+    id,
+    onClickEdit,
+    onClickDelete,
+}: PropsButtonAction) {
     return (
         <th className="table-cell">
             <div className="flex max-h-[3rem] min-h-[3rem] min-w-[6rem] max-w-[6rem] flex-row items-center justify-around">
-                <ButtonEdit id={id} />
-                <ButtonDelete id={id} />
+                <ButtonEdit handleClick={() => onClickEdit(id)} />
+                <ButtonDelete handleClick={() => onClickDelete(id)} />
             </div>
         </th>
     )

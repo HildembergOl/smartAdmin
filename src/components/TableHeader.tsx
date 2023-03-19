@@ -18,7 +18,7 @@ export function TableHeader({ children }: PropsTable) {
 
 export function TableArea({ children, visible }: PropsTableArea) {
     return (
-        <div className="mb-3 flex h-full w-full flex-col overflow-auto">
+        <div className="sticky mb-3 flex h-full min-h-full w-full flex-col overflow-auto">
             <table
                 className={`${
                     visible ? '' : 'hidden'

@@ -3,12 +3,14 @@ import { mainReducer } from '../reducers'
 import { sidebarInitialState } from '../reducers/SidebarReducer'
 import { systemInitialState } from '../reducers/SystemReducer'
 import { userInitialState } from '../reducers/UserReducer'
+import { entryInitialState } from '../reducers/EntryReducer'
 import { ContextType, InitialStateType } from '../types'
 
 const initialState: InitialStateType = {
     user: userInitialState,
     sidebar: sidebarInitialState,
     system: systemInitialState,
+    entry: entryInitialState,
 }
 
 export const Context = createContext<ContextType>({

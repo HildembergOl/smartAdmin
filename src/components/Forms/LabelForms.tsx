@@ -1,38 +1,60 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from 'react'
-import { PropsModelValues } from '../../types'
-
-type Props = {
+type PropsLabel = {
+    name: string
+    endpoint: string
+    width: string
+    value: string | number
+    disabled: boolean
     type: string
-    data: PropsModelValues
     page: string
+    required: boolean
+    onChangeValue: (e: string) => void
 }
-export function LabelText({ type, data, page }: Props) {
-    const { column, name, values } = data
 
-    const [value, setValue] = useState('')
-
-    const changeValue = (e: any) => {
-        setValue(e.target.value)
+export function LabelText({
+    name,
+    endpoint,
+    width,
+    value,
+    disabled,
+    type,
+    page,
+    required,
+    onChangeValue,
+}: PropsLabel) {
+    const size = () => {
+        if (width === 'small') {
+            return 'w-32'
+        }
+        if (width === 'average') {
+            return 'w-48'
+        }
+        if (width === 'big') {
+            return 'w-96'
+        }
+        return ''
     }
-    const initialValue = page === 'edit' ? values : value
-    // eslint-disable-next-line no-console
-    console.log(initialValue)
+
     return (
-        <label
-            htmlFor={column}
-            className="m-2 flex h-16 w-[25vw] flex-col justify-between bg-slate-300"
+        <div
+            className={`my-2 flex h-auto ${size()} max-w-full flex-col px-2 font-semibold max-sm:w-full`}
         >
-            <p className="h-full w-full from-neutral-400 font-semibold">
+            <label
+                htmlFor={`${page}_${endpoint}`}
+                className="mb-1 h-full w-full"
+            >
                 {name}
-            </p>
+            </label>
             <input
                 type={type}
-                id={column}
-                onChange={changeValue}
-                value={initialValue}
-                className="rounded bg-slate-400 py-1 pl-3 shadow-sm focus:no-underline focus:outline-none"
+                id={`${page}_${endpoint}`}
+                className="h-full w-full items-center justify-center rounded bg-slate-300 py-1 pl-3 text-start font-normal shadow-sm shadow-slate-500 focus:no-underline focus:outline-none"
+                disabled={disabled}
+                name={endpoint}
+                defaultValue={value}
+                required={required}
+                onChange={(e) => onChangeValue(e.target.value)}
             />
-        </label>
+        </div>
     )
 }

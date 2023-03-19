@@ -5,7 +5,6 @@ import { NotFound } from '../pages/NotFound'
 import { Person } from '../pages/Person'
 import { User } from '../pages/User'
 import { RequireAuth } from '../services/RequireAuth'
-import { Modal } from '../pages/Modal'
 import { Login } from '../pages/Login'
 
 export function RoutesApp() {
@@ -49,22 +48,6 @@ export function RoutesApp() {
                 element={
                     <RequireAuth>
                         <Business />
-                    </RequireAuth>
-                }
-            />
-            <Route
-                path="/:page/new"
-                element={
-                    <RequireAuth>
-                        <Modal />
-                    </RequireAuth>
-                }
-            />
-            <Route
-                path="/:page/edit/:id"
-                element={
-                    <RequireAuth>
-                        <Modal />
                     </RequireAuth>
                 }
             />

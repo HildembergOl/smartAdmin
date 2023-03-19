@@ -17,7 +17,7 @@ export function HamburguerMenu() {
     }
     return (
         <div
-            className="group flex h-5 w-6 flex-col items-center rounded"
+            className="group mr-4 flex h-5 w-10 flex-col items-start justify-start rounded px-2"
             onClick={handleClick}
             aria-hidden="true"
         >

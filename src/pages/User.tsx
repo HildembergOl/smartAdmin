@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-import { SetStateAction, useCallback, useEffect, useState } from 'react'
+import { SetStateAction, useEffect, useMemo, useState } from 'react'
 import { DashPage } from '../components/DashPage'
 import {
     TableBody,
     TableBodyRow,
     TableBodyRowValue,
+    ButtonActionsArea,
 } from '../components/TableBody'
 import {
     TableArea,
@@ -12,58 +12,119 @@ import {
     TableHeaderRow,
     TableHeaderRowValue,
 } from '../components/TableHeader'
-import * as dataApiBusiness from '../api/DataBusiness.json'
 import { FilterArea } from '../components/FilterArea'
 import { LabelFilterText } from '../components/LabelsFilter'
-
-let searchTimer: NodeJS.Timeout
+import { ButtonActionsPage } from '../components/Button'
+import { Modal } from '../components/Modal'
+import { UserEntry } from '../modal/UserEntry'
+import { PropsValuesUser, PropsValuesPerson } from '../types'
+import { Loading } from '../components/Loading'
+import { userApi } from '../api/UserApi'
 
 export function User() {
-    const dash = dataApiBusiness.dashboard
-    const apiData = dataApiBusiness.table
-    const perm = dataApiBusiness.businessPermition
+    const initialData: PropsValuesUser = {
+        id: 0,
+        status: '',
+        login: '',
+        password: '',
+        email: '',
+        userType: '',
+        personId: '',
+        Person: {} as PropsValuesPerson,
+    }
 
-    const [data, setData] = useState(apiData)
+    const [data, setData] = useState<PropsValuesUser[]>([])
+    const [loading, setLoading] = useState(true)
+    const [refresh, setRefresh] = useState(true)
     const [filter, setFilter] = useState('')
+    const [modal, setModal] = useState(false)
+    const [modalData, setModalData] = useState<PropsValuesUser>(initialData)
+    const [typeModal, setTypeModal] = useState('')
 
-    const params = Object.getOwnPropertyNames(apiData[0])
-    const [searchParams] = useState(params)
+    const datavalue = async () => {
+        setLoading(true)
+        const result = await userApi.all()
+        setData(result)
+        setLoading(false)
+        setRefresh(false)
+    }
 
-    const searchData = useCallback(
-        (v: { toString: () => string }) => {
-            return apiData.filter((item) => {
-                return searchParams.some((newItem) => {
-                    return (
-                        // @ts-ignore
-                        item[newItem]
-                            ?.toString()
-                            ?.toLowerCase()
-                            ?.indexOf(v.toString().toLowerCase()) > -1
-                    )
-                })
-            })
-        },
-        [apiData, searchParams]
-    )
+    useEffect(() => {
+        datavalue()
+    }, [modal, refresh])
+
+    // Início do código de pesquisa
+    const { password, ...params } = initialData
+    const searchParams = Object.getOwnPropertyNames(params)
 
     const onChangeValues = (e: {
         target: { value: SetStateAction<string> }
     }) => {
-        setFilter(e.target.value)
+        const value = e.target.value.toString().toLowerCase()
+        setFilter(value)
     }
 
-    useEffect(() => {
-        clearTimeout(searchTimer)
-        searchTimer = setTimeout(() => {
-            const filtered = searchData(filter)
-            setData(filtered)
-        }, 2000)
-    }, [filter, searchData])
+    const searchData = useMemo(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return data.filter((item: any) => {
+            return searchParams.some((newItem) => {
+                return (
+                    item[newItem].toString().toLowerCase().indexOf(filter) > -1
+                )
+            })
+        })
+    }, [data, filter, searchParams])
 
+    // Fim do código de pesquisa
+
+    const HandleClickButtonNew = () => {
+        setTypeModal('Cadastrar Usuário')
+        setModalData(initialData)
+        setModal(!modal)
+    }
+    const HandleClickButtonRefresh = () => {
+        setRefresh(true)
+    }
+
+    const handleClickCloseModal = (e: { target: { id: string } }) => {
+        if (e.target.id === 'modalEntry') {
+            setModal(!modal)
+        }
+    }
+
+    const HandleClickEdit = (e: number) => {
+        const objUser = data[e]
+        const newObjUser = { ...objUser, password: '' }
+        setTypeModal('Editar Usuário')
+        setModalData(newObjUser)
+        setModal(!modal)
+    }
+
+    const HandleClickDelete = (e: number) => {
+        setTypeModal('Excluir Usuário')
+        setModalData(data[e])
+        setModal(!modal)
+    }
+
+    const handleClickConfirm = () => {
+        setModal(!modal)
+    }
+    const inactive = data.filter((e) => e.status === 'Inativo')
+    const active = data.filter((e) => e.status === 'Ativo')
+    const atention = data.filter(
+        (e) => e.status !== 'Ativo' && e.status !== 'Inativo'
+    )
+
+    const dash = {
+        all: { name: 'Todos', value: data.length || 0 },
+        inactive: { name: 'Inativos', value: inactive.length || 0 },
+        active: { name: 'Ativos', value: active.length || 0 },
+        atention: { name: 'Pendentes', value: atention.length || 0 },
+    }
     return (
         <>
             <DashPage
-                visible={dash.visible}
+                visible
                 all={dash.all}
                 inactive={dash.inactive}
                 active={dash.active}
@@ -71,66 +132,89 @@ export function User() {
             />
             <FilterArea>
                 <LabelFilterText
-                    id="business"
+                    id="personSearch"
                     name="Pesquisar"
-                    type="text"
+                    type="search"
+                    value={filter}
                     onChangeValue={onChangeValues}
                 />
             </FilterArea>
-            <TableArea visible>
-                <TableHeader>
-                    <TableHeaderRow>
-                        <TableHeaderRowValue value="Ações" />
-                        <TableHeaderRowValue value="Código" />
-                        <TableHeaderRowValue value="Tipo" />
-                        <TableHeaderRowValue value="Empresa" />
-                        <TableHeaderRowValue value="CNPJ" />
-                        <TableHeaderRowValue value="Endereço" />
-                        <TableHeaderRowValue value="Grupo Empresarial" />
-                        <TableHeaderRowValue value="Situação" />
-                    </TableHeaderRow>
-                </TableHeader>
-                <TableBody>
-                    {data.map((item) => {
-                        return (
-                            <TableBodyRow
-                                rowId={item.id}
-                                key={`${perm.id}-table-row-${item.id}`}
-                            >
-                                <TableBodyRowValue value="Ações" />
-                                <TableBodyRowValue
-                                    key={`${perm.id}-table-row-col-1-${item.id}`}
-                                    value={item.id}
-                                />
-                                <TableBodyRowValue
-                                    key={`${perm.id}-table-row-col-2-${item.id}`}
-                                    value={item.type}
-                                />
-                                <TableBodyRowValue
-                                    key={`${perm.id}-table-row-col-3-${item.id}`}
-                                    value={item.business}
-                                />
-                                <TableBodyRowValue
-                                    key={`${perm.id}-table-row-col-4-${item.id}`}
-                                    value={item.document}
-                                />
-                                <TableBodyRowValue
-                                    key={`${perm.id}-table-row-col-5-${item.id}`}
-                                    value={item.address}
-                                />
-                                <TableBodyRowValue
-                                    key={`${perm.id}-table-row-col-6-${item.id}`}
-                                    value={item.businessGroup}
-                                />
-                                <TableBodyRowValue
-                                    key={`${perm.id}-table-row-col-7-${item.id}`}
-                                    value={item.situation}
-                                />
-                            </TableBodyRow>
-                        )
-                    })}
-                </TableBody>
-            </TableArea>
+            <ButtonActionsPage
+                onClickNew={HandleClickButtonNew}
+                onClickRefresh={HandleClickButtonRefresh}
+                refresh={refresh}
+            />
+            {loading ? (
+                <Loading width="page" information />
+            ) : (
+                <TableArea visible>
+                    <TableHeader>
+                        <TableHeaderRow>
+                            <TableHeaderRowValue value="Ações" />
+                            <TableHeaderRowValue value="Código" />
+                            <TableHeaderRowValue value="Status" />
+                            <TableHeaderRowValue value="Login" />
+                            <TableHeaderRowValue value="E-mail" />
+                            <TableHeaderRowValue value="Tipo Usuário" />
+                            <TableHeaderRowValue value="Pessoa" />
+                        </TableHeaderRow>
+                    </TableHeader>
+                    <TableBody>
+                        {searchData.map((values, index) => {
+                            return (
+                                <TableBodyRow
+                                    rowId={values.id}
+                                    key={`${values.id}-key-row-${values.id}`}
+                                >
+                                    <ButtonActionsArea
+                                        id={index}
+                                        onClickEdit={(e) => HandleClickEdit(e)}
+                                        onClickDelete={(e) =>
+                                            HandleClickDelete(e)
+                                        }
+                                    />
+                                    <TableBodyRowValue
+                                        key={`col01-${values.id}`}
+                                        value={values.id}
+                                    />
+                                    <TableBodyRowValue
+                                        key={`col02-${values.id}`}
+                                        value={values.status}
+                                    />
+                                    <TableBodyRowValue
+                                        key={`col03-${values.id}`}
+                                        value={values.login}
+                                    />
+                                    <TableBodyRowValue
+                                        key={`col04-${values.id}`}
+                                        value={values.email}
+                                    />
+                                    <TableBodyRowValue
+                                        key={`col05-${values.id}`}
+                                        value={values.userType}
+                                    />
+                                    <TableBodyRowValue
+                                        key={`col06-${values.id}`}
+                                        value={values.Person.namePerson}
+                                    />
+                                </TableBodyRow>
+                            )
+                        })}
+                    </TableBody>
+                </TableArea>
+            )}
+            {modal && (
+                <Modal
+                    handleClickClose={handleClickCloseModal}
+                    type={typeModal}
+                >
+                    <UserEntry
+                        data={modalData}
+                        type={typeModal}
+                        closeModal={handleClickConfirm}
+                    />
+                </Modal>
+            )}
         </>
     )
 }

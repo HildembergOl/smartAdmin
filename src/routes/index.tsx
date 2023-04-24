@@ -6,6 +6,8 @@ import { Person } from '../pages/Person'
 import { User } from '../pages/User'
 import { RequireAuth } from '../services/RequireAuth'
 import { Login } from '../pages/Login'
+import { Documents } from '../pages/Documents'
+import { Finance } from '../pages/Finance'
 
 export function RoutesApp() {
     return (
@@ -48,6 +50,22 @@ export function RoutesApp() {
                 element={
                     <RequireAuth>
                         <Business />
+                    </RequireAuth>
+                }
+            />
+            <Route
+                path="/documents"
+                element={
+                    <RequireAuth>
+                        <Documents />
+                    </RequireAuth>
+                }
+            />
+            <Route
+                path="/finance"
+                element={
+                    <RequireAuth>
+                        <Finance />
                     </RequireAuth>
                 }
             />

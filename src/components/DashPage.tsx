@@ -2,10 +2,10 @@ import { Card } from './Card'
 
 type Props = {
     visible: boolean
-    all: { name: string; value: string }
-    active: { name: string; value: string }
-    inactive: { name: string; value: string }
-    atention: { name: string; value: string }
+    all: { name: string; value: number }
+    active: { name: string; value: number }
+    inactive: { name: string; value: number }
+    atention: { name: string; value: number }
 }
 
 export function DashPage({ visible, all, active, inactive, atention }: Props) {

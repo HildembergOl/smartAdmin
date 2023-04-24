@@ -4,7 +4,7 @@ type PropsChildren = {
     children: React.ReactNode
 }
 export function FilterArea({ children }: PropsChildren) {
-    const [hiddenFilter, setHiddenFilter] = useState(false)
+    const [hiddenFilter, setHiddenFilter] = useState(true)
 
     const handleClickFilter = () => {
         setHiddenFilter(!hiddenFilter)
@@ -20,7 +20,7 @@ export function FilterArea({ children }: PropsChildren) {
                 <p className="font-semibold text-gray-800">Filtros</p>
                 <img
                     className={`h-4 w-auto ${
-                        hiddenFilter ? '-rotate-180' : false
+                        hiddenFilter ? '' : 'rotate-180'
                     } cursor-pointer rounded-full border-[0.5px] p-[2px] duration-300 ease-in-out`}
                     src="../../public/icons/seta.png"
                     alt="abrir/fechar"

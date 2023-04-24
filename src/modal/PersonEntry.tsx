@@ -1,24 +1,26 @@
 import { useEffect, useState } from 'react'
 import { LabelText } from '../components/Forms/LabelText'
-import { businessApi } from '../api/BusinessApi'
-import { PropsValuesBusiness } from '../types'
+import { personApi } from '../api/PersonApi'
+import { PropsValuesPerson } from '../types'
 import { Submit } from '../components/Button'
 import { LabelSelect } from '../components/Forms/LabelSelect'
 import { Alert } from '../components/Alert'
+import { GetCEP } from '../components/Forms/GetCEP'
+import { AlertMessage } from '../constants'
 
 type Props = {
-    data: PropsValuesBusiness
+    data: PropsValuesPerson
     type: string
     closeModal: () => void
 }
 
-export function BusinessEntry({ data, type, closeModal }: Props) {
-    const [values, setValues] = useState<PropsValuesBusiness>(data)
+export function PersonEntry({ data, type, closeModal }: Props) {
+    const [values, setValues] = useState<PropsValuesPerson>(data)
     const [disabled, setDisabled] = useState(false)
     const [loading, setLoading] = useState(false)
 
     const submitType = type.split(' ')[0]
-    const dataSelect = ['Ativo', 'Pendente', 'Bloqueado', 'Inativo']
+    const dataSelect = ['Ativo', 'Inativo']
     const [alert, setAlert] = useState(false)
     const [messageAlert, setMessageAlert] = useState('')
     const [colorMessage, setColorMessage] = useState('')
@@ -40,38 +42,51 @@ export function BusinessEntry({ data, type, closeModal }: Props) {
     const handleSubmit = async (e: { preventDefault: () => void }) => {
         e.preventDefault()
 
-        const validate = Object.values(values).every((v) => v !== '')
-
         setDisabled(true)
         setLoading(true)
         let response
 
         if (submitType === 'Editar') {
-            response = await businessApi.update(values)
+            response = await personApi.update(values)
         }
         if (submitType === 'Cadastrar') {
-            response = await businessApi.insert(values)
+            response = await personApi.insert(values)
         }
         if (submitType === 'Excluir') {
-            response = await businessApi.delete(values)
+            response = await personApi.delete(values)
         }
-        if (!validate && submitType !== 'Excluir') {
-            setAlert(true)
-            setMessageAlert('Preencha todos os campos antes de continuar')
-            setColorMessage('danger')
-        }
+
         if (response.status) {
             closeModal()
             setDisabled(false)
             setLoading(false)
         } else {
-            // eslint-disable-next-line no-alert
-            window.alert(
-                'Preencha todos os campos obrigatórios e tente novamente!'
-            )
-            closeModal()
+            setAlert(true)
+            setMessageAlert('00')
+            setColorMessage('danger')
             setDisabled(false)
             setLoading(false)
+        }
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleClickBuscaCEP = (viaCepValues: any) => {
+        const { logradouro, bairro, localidade, uf, ibge, erro, complemento } =
+            viaCepValues
+        if (erro) {
+            // eslint-disable-next-line no-alert
+            window.alert(AlertMessage['01'])
+        } else {
+            const viaCepNewValues = {
+                ...values,
+                address: logradouro.toUpperCase(),
+                codDistrict: ibge,
+                district: bairro.toUpperCase(),
+                city: localidade.toUpperCase(),
+                state: uf.toUpperCase(),
+                addressComplement: complemento.toUpperCase(),
+            }
+            setValues(viaCepNewValues)
         }
     }
 
@@ -82,7 +97,7 @@ export function BusinessEntry({ data, type, closeModal }: Props) {
                     Dados Básicos
                 </p>
                 <div className="flex h-full w-full flex-col items-start justify-start p-1">
-                    <form className="group-[formBusines]: flex w-full flex-wrap items-start justify-start rounded-md max-sm:flex-col">
+                    <div className="group-[formBusines]: flex w-full flex-wrap items-start justify-start rounded-md max-sm:flex-col">
                         <LabelText
                             name="Código"
                             endpoint="id"
@@ -90,7 +105,7 @@ export function BusinessEntry({ data, type, closeModal }: Props) {
                             value={values.id}
                             disabled
                             type="GERAL"
-                            page="business"
+                            page="person"
                             required
                             onChangeValue={changeValues}
                         />
@@ -101,121 +116,163 @@ export function BusinessEntry({ data, type, closeModal }: Props) {
                             value={values.status}
                             disabled={false}
                             data={dataSelect}
-                            page="business"
+                            page="person"
                             required
                             onChangeValue={changeValues}
                         />
                         <LabelText
-                            name="Razão Social"
-                            endpoint="nameBusiness"
+                            name="Nome"
+                            endpoint="namePerson"
                             width="big"
-                            value={values.nameBusiness}
+                            value={values.namePerson}
                             disabled={disabled}
                             type="GERAL"
-                            page="business"
+                            page="person"
                             required
                             onChangeValue={changeValues}
                         />
                         <LabelText
-                            name="Nome Fantasia"
-                            endpoint="tradeName"
+                            name="Documento"
+                            endpoint="document"
                             width="average"
+                            value={values.document}
+                            disabled={disabled}
+                            type="CPF_CNPJ"
+                            page="person"
+                            required
+                            onChangeValue={changeValues}
+                        />
+                        <LabelText
+                            name="Fantasia/Apelido"
+                            endpoint="tradeName"
+                            width="big"
                             value={values.tradeName}
                             disabled={disabled}
                             type="GERAL"
-                            page="business"
+                            page="person"
                             required
                             onChangeValue={changeValues}
                         />
                         <LabelText
-                            name="CNPJ"
-                            endpoint="businessCNPJ"
+                            name={
+                                values.document.length > 14
+                                    ? 'Inscrição Estadual'
+                                    : 'Registro Geral'
+                            }
+                            endpoint="numberRegister"
                             width="average"
-                            value={values.businessCNPJ}
-                            disabled={disabled}
-                            type="CNPJ"
-                            page="business"
-                            required
-                            onChangeValue={changeValues}
-                        />
-                        <LabelText
-                            name="Inscrição Estadual"
-                            endpoint="stateRegister"
-                            width="average"
-                            value={values.stateRegister}
+                            value={values.numberRegister}
                             disabled={disabled}
                             type="GERAL"
-                            page="business"
+                            page="person"
                             required
                             onChangeValue={changeValues}
                         />
                         <LabelText
-                            name="CEP"
-                            endpoint="postCodeBusiness"
-                            width="small"
-                            value={values.postCodeBusiness}
+                            name="Telefone"
+                            endpoint="phone"
+                            width="average"
+                            value={values.phone}
                             disabled={disabled}
-                            type="CEP"
-                            page="business"
+                            type="PHONE"
+                            page="person"
                             required
                             onChangeValue={changeValues}
+                        />
+                        <hr className="w-full bg-black" />
+                        <LabelText
+                            name="CEP"
+                            endpoint="postCode"
+                            width="small"
+                            value={values.postCode}
+                            disabled={disabled}
+                            type="CEP"
+                            page="person"
+                            required
+                            onChangeValue={changeValues}
+                        />
+                        <GetCEP
+                            value={values.postCode}
+                            handleClick={(e) => handleClickBuscaCEP(e)}
                         />
                         <LabelText
                             name="Endereço"
-                            endpoint="addressBusiness"
+                            endpoint="address"
                             width="big"
-                            value={values.addressBusiness}
+                            value={values.address}
                             disabled={disabled}
                             type="GERAL"
-                            page="business"
+                            page="person"
                             required
                             onChangeValue={changeValues}
                         />
                         <LabelText
                             name="Número"
-                            endpoint="numberAddressBusiness"
+                            endpoint="numberAddress"
                             width="small"
-                            value={values.numberAddressBusiness}
+                            value={values.numberAddress}
                             disabled={disabled}
                             type="GERAL"
-                            page="business"
+                            page="person"
                             required
                             onChangeValue={changeValues}
                         />
                         <LabelText
                             name="Bairro"
-                            endpoint="districtBusiness"
+                            endpoint="district"
                             width="average"
-                            value={values.districtBusiness}
+                            value={values.district}
                             disabled={disabled}
                             type="GERAL"
-                            page="business"
+                            page="person"
+                            required
+                            onChangeValue={changeValues}
+                        />
+                        <LabelText
+                            name="Código IBGE"
+                            endpoint="codDistrict"
+                            width="small"
+                            value={values.codDistrict}
+                            disabled={disabled}
+                            type="GERAL"
+                            page="person"
                             required
                             onChangeValue={changeValues}
                         />
                         <LabelText
                             name="Cidade"
-                            endpoint="cityBusiness"
+                            endpoint="city"
                             width="average"
-                            value={values.cityBusiness}
+                            value={values.city}
                             disabled={disabled}
                             type="GERAL"
-                            page="business"
+                            page="person"
                             required
                             onChangeValue={changeValues}
                         />
                         <LabelText
                             name="Estado"
-                            endpoint="stateBusiness"
-                            width="average"
-                            value={values.stateBusiness}
+                            endpoint="state"
+                            width="small"
+                            value={values.state}
                             disabled={disabled}
                             type="GERAL"
-                            page="business"
+                            page="person"
                             required
                             onChangeValue={changeValues}
                         />
-                    </form>
+                        <LabelText
+                            name="Complemento"
+                            endpoint="addressComplement"
+                            width="big"
+                            value={values.addressComplement}
+                            disabled={disabled}
+                            type="GERAL"
+                            page="person"
+                            required
+                            onChangeValue={changeValues}
+                        />
+                    </div>
                 </div>
             </div>
             <Submit

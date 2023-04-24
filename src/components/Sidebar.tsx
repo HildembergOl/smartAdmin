@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { Context } from '../contexts'
 import { Menu } from './Menu'
+import { ArrowMenu } from './ButtonMenuOpen'
 
 export function Sidebar() {
     const { state } = useContext(Context)
@@ -9,12 +10,13 @@ export function Sidebar() {
         <aside
             className={`flex ${
                 state.sidebar.sidebarOpen
-                    ? 'w-60 min-w-[15rem] max-sm:w-full'
+                    ? 'fixed z-10 w-60 min-w-[15rem] max-sm:w-full'
                     : 'w-16 min-w-[4rem] max-sm:hidden'
-            } flex h-full items-center overflow-y-auto rounded-r-2xl bg-zinc-700 shadow-lg`}
+            } flex h-full flex-col items-center overflow-auto rounded-r-md bg-zinc-700 shadow-lg`}
             key="aside"
             aria-hidden="false"
         >
+            <ArrowMenu />
             <div className="h-full w-full items-center justify-between">
                 <Menu idMenu={1} />
                 <Menu idMenu={2} />

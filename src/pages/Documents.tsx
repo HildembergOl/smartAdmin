@@ -16,40 +16,41 @@ import { FilterArea } from '../components/FilterArea'
 import { LabelFilterText } from '../components/LabelsFilter'
 import { ButtonActionsPage } from '../components/Button'
 import { Modal } from '../components/Modal'
-import { BusinessEntry } from '../modal/BusinessEntry'
-import { PropsValuesBusiness, PropsGroup } from '../types'
+import { PersonEntry } from '../modal/PersonEntry'
+import { PropsValuesPerson } from '../types'
 import { Loading } from '../components/Loading'
-import { businessApi } from '../api/BusinessApi'
+import { personApi } from '../api/PersonApi'
 
-export function Business() {
-    const initialData: PropsValuesBusiness = {
+export function Documents() {
+    const initialData: PropsValuesPerson = {
         id: 0,
-        nameBusiness: '',
         status: '',
+        namePerson: '',
         tradeName: '',
-        businessCNPJ: '',
-        stateRegister: '',
-        postCodeBusiness: '',
-        addressBusiness: '',
-        numberAddressBusiness: '',
-        districtBusiness: '',
-        cityBusiness: '',
-        stateBusiness: '',
-        groupId: 0,
-        group: {} as PropsGroup,
+        document: '',
+        numberRegister: '',
+        phone: '',
+        postCode: '',
+        address: '',
+        numberAddress: '',
+        codDistrict: 0,
+        district: '',
+        city: '',
+        state: '',
+        addressComplement: '',
     }
 
-    const [data, setData] = useState<PropsValuesBusiness[]>([])
+    const [data, setData] = useState<PropsValuesPerson[]>([])
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(true)
     const [filter, setFilter] = useState('')
     const [modal, setModal] = useState(false)
-    const [modalData, setModalData] = useState<PropsValuesBusiness>(initialData)
+    const [modalData, setModalData] = useState<PropsValuesPerson>(initialData)
     const [typeModal, setTypeModal] = useState('')
 
     const datavalue = async () => {
         setLoading(true)
-        const result = await businessApi.all()
+        const result = await personApi.all()
         setData(result)
         setLoading(false)
         setRefresh(false)
@@ -85,7 +86,7 @@ export function Business() {
     // Fim do código de pesquisa
 
     const HandleClickButtonNew = () => {
-        setTypeModal('Cadastrar Empresa')
+        setTypeModal('Cadastrar Pessoa')
         setModalData(initialData)
         setModal(!modal)
     }
@@ -101,13 +102,13 @@ export function Business() {
     }
 
     const HandleClickEdit = (e: number) => {
-        setTypeModal('Editar Empresa')
+        setTypeModal('Editar Pessoa')
         setModalData(data[e])
         setModal(!modal)
     }
 
     const HandleClickDelete = (e: number) => {
-        setTypeModal('Excluir Empresa')
+        setTypeModal('Excluir Pessoa')
         setModalData(data[e])
         setModal(!modal)
     }
@@ -117,7 +118,9 @@ export function Business() {
     }
     const inactive = data.filter((e) => e.status === 'Inativo')
     const active = data.filter((e) => e.status === 'Ativo')
-    const atention = data.filter((e) => e.status !== 'Ativo')
+    const atention = data.filter(
+        (e) => e.status !== 'Ativo' && e.status !== 'Inativo'
+    )
 
     const dash = {
         all: { name: 'Todos', value: data.length || 0 },
@@ -136,7 +139,7 @@ export function Business() {
             />
             <FilterArea>
                 <LabelFilterText
-                    id="businessSearch"
+                    id="personSearch"
                     name="Pesquisar"
                     type="search"
                     value={filter}
@@ -157,14 +160,13 @@ export function Business() {
                             <TableHeaderRowValue value="Ações" />
                             <TableHeaderRowValue value="Código" />
                             <TableHeaderRowValue value="Status" />
-                            <TableHeaderRowValue value="Razão Social" />
-                            <TableHeaderRowValue value="Fantasia" />
-                            <TableHeaderRowValue value="CNPJ" />
+                            <TableHeaderRowValue value="Nome" />
+                            <TableHeaderRowValue value="Documento" />
                             <TableHeaderRowValue value="Endereço" />
                             <TableHeaderRowValue value="Bairro" />
                             <TableHeaderRowValue value="Cidade" />
                             <TableHeaderRowValue value="UF" />
-                            <TableHeaderRowValue value="Grupo Empresarial" />
+                            <TableHeaderRowValue value="Telefone" />
                         </TableHeaderRow>
                     </TableHeader>
                     <TableBody>
@@ -191,39 +193,31 @@ export function Business() {
                                     />
                                     <TableBodyRowValue
                                         key={`col03-${values.id}`}
-                                        value={values.nameBusiness}
+                                        value={values.namePerson}
                                     />
                                     <TableBodyRowValue
                                         key={`col04-${values.id}`}
-                                        value={values.tradeName}
+                                        value={values.document}
                                     />
                                     <TableBodyRowValue
                                         key={`col05-${values.id}`}
-                                        value={values.businessCNPJ}
+                                        value={values.address}
                                     />
                                     <TableBodyRowValue
                                         key={`col06-${values.id}`}
-                                        value={
-                                            values.numberAddressBusiness
-                                                ? `${values.addressBusiness},${values.numberAddressBusiness}`
-                                                : `${values.addressBusiness}`
-                                        }
+                                        value={values.district}
                                     />
                                     <TableBodyRowValue
                                         key={`col07-${values.id}`}
-                                        value={values.districtBusiness}
+                                        value={values.city}
                                     />
                                     <TableBodyRowValue
                                         key={`col08-${values.id}`}
-                                        value={values.cityBusiness}
+                                        value={values.state}
                                     />
                                     <TableBodyRowValue
                                         key={`col09-${values.id}`}
-                                        value={values.stateBusiness}
-                                    />
-                                    <TableBodyRowValue
-                                        key={`col10-${values.group.groupName}`}
-                                        value={values.group.groupName}
+                                        value={values.phone}
                                     />
                                 </TableBodyRow>
                             )
@@ -236,7 +230,7 @@ export function Business() {
                     handleClickClose={handleClickCloseModal}
                     type={typeModal}
                 >
-                    <BusinessEntry
+                    <PersonEntry
                         data={modalData}
                         type={typeModal}
                         closeModal={handleClickConfirm}

@@ -7,7 +7,7 @@ export function MainPage({ children }: PropsChildren) {
     return (
         <div
             id="MainPage"
-            className="fixed m-0 flex h-screen w-screen flex-col p-0 "
+            className="fixed m-0 flex h-screen w-screen flex-col p-0"
         >
             <Navbar />
             <div
@@ -17,7 +17,7 @@ export function MainPage({ children }: PropsChildren) {
                 <Sidebar />
                 <div
                     id="RightSide"
-                    className="flex h-full max-h-full w-full max-w-full flex-col overflow-y-auto overflow-x-hidden p-3"
+                    className="flex h-full max-h-max min-h-full w-full max-w-full flex-col overflow-y-auto overflow-x-hidden p-3"
                 >
                     {children}
                 </div>

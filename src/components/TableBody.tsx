@@ -29,7 +29,7 @@ export function TableBodyRow({ children, rowId }: PropsTableRow) {
 
 export function TableBody({ children }: PropsTable) {
     return (
-        <tbody className="table-row-group overflow-x-auto bg-slate-200 font-normal text-gray-600 max-sm:text-[0.5rem]  max-sm:font-normal">
+        <tbody className="table-row-group overflow-x-auto bg-slate-200 text-xs font-normal text-gray-600 max-sm:text-[0.5rem]  max-sm:font-normal">
             {children}
         </tbody>
     )
@@ -41,8 +41,8 @@ export function ButtonActionsArea({
     onClickDelete,
 }: PropsButtonAction) {
     return (
-        <th className="table-cell">
-            <div className="flex max-h-[3rem] min-h-[3rem] min-w-[6rem] max-w-[6rem] flex-row items-center justify-around">
+        <th key={`button-action-${id}`} className="table-cell items-center">
+            <div className="flex max-h-[3rem] min-h-[3rem] min-w-[6rem] max-w-[6rem] flex-row content-between items-center justify-between">
                 <ButtonEdit handleClick={() => onClickEdit(id)} />
                 <ButtonDelete handleClick={() => onClickDelete(id)} />
             </div>

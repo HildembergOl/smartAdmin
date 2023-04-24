@@ -21,12 +21,22 @@ export function Menu({ idMenu }: MenuProps) {
         { id: 8, menu: 'Marketing', img: 'marketing' },
         { id: 9, menu: 'Patrimonial', img: 'patrimonial' },
     ]
-    const { state } = useContext(Context)
 
+    const { state, dispatch } = useContext(Context)
     const [stateMenu, dispatchMenu] = useState(false)
 
     const handleClickMenu = () => {
         dispatchMenu(!stateMenu)
+    }
+    const handleClickItem = () => {
+        dispatchMenu(!stateMenu)
+        dispatch({
+            type: 'CLOSE_SIDEBAR',
+            payload: {
+                sidebar: !state.sidebar.sidebarOpen,
+                menu: true,
+            },
+        })
     }
     const menu = permissionItem.find((p) => (p.id === idMenu ? p : false))
 
@@ -63,7 +73,9 @@ export function Menu({ idMenu }: MenuProps) {
                 } max-w-full flex-none origin-left flex-col pl-8`}
                 key={`4${menu?.id}`}
             >
-                <MenuItem key={`5${idMenu}`}>{idMenu}</MenuItem>
+                <MenuItem key={`5${idMenu}`} handleCLick={handleClickItem}>
+                    {idMenu}
+                </MenuItem>
             </ul>
         </div>
     )

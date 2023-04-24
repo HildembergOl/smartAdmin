@@ -17,7 +17,7 @@ export function HamburguerMenu() {
     }
     return (
         <div
-            className="group mr-4 flex h-5 w-10 flex-col items-start justify-start rounded px-2"
+            className="hidden h-5 w-10 flex-col items-start justify-start rounded px-2 max-md:flex"
             onClick={handleClick}
             aria-hidden="true"
         >
@@ -41,6 +41,37 @@ export function HamburguerMenu() {
                         ? 'm-0 translate-x-3 -rotate-180 opacity-50 group-hover:opacity-100'
                         : 'opacity-50 group-hover:opacity-100'
                 }`}
+            />
+        </div>
+    )
+}
+
+export function ArrowMenu() {
+    const { state, dispatch } = useContext(Context)
+    const handleClick = () => {
+        dispatch({
+            type: 'CLOSE_SIDEBAR',
+            payload: {
+                sidebar: !state.sidebar.sidebarOpen,
+                menu: true,
+            },
+        })
+    }
+
+    return (
+        <div
+            className={`fixed z-10 ${
+                state.sidebar.sidebarOpen ? '-mr-60' : '-mr-16'
+            } mt-4 rounded-full border-none bg-zinc-600 max-md:hidden`}
+            onClick={handleClick}
+            aria-hidden
+        >
+            <img
+                className={`h-5 w-auto ${
+                    state.sidebar.sidebarOpen ? 'rotate-180' : 'rotate-0'
+                } cursor-pointer p-1 grayscale duration-300 ease-in-out`}
+                src="../../public/icons/fastfoward.png"
+                alt="abrir/fechar"
             />
         </div>
     )

@@ -1,13 +1,14 @@
 import { Link } from 'react-router-dom'
 
-type PropsChildren = { children: number }
+type PropsChildren = { children: number; handleCLick: () => void }
 
-export function MenuItem({ children }: PropsChildren) {
+export function MenuItem({ children, handleCLick }: PropsChildren) {
     const PermissionItemMenu = [
         { id: 1, idMenu: 1, title: 'Dashboard', src: '' },
         { id: 2, idMenu: 2, title: 'Pessoas', src: 'person' },
         { id: 3, idMenu: 2, title: 'Usuários', src: 'user' },
         { id: 4, idMenu: 2, title: 'Empresas', src: 'business' },
+        { id: 5, idMenu: 2, title: 'Documentos', src: 'documents' },
     ]
 
     return (
@@ -19,6 +20,7 @@ export function MenuItem({ children }: PropsChildren) {
                             to={`/${data.src}`}
                             key={`link_${data.id}_${data.idMenu}`}
                             className="flex w-full flex-row justify-center"
+                            onClick={handleCLick}
                             replace
                         >
                             <img

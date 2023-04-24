@@ -1,4 +1,4 @@
-type Props = { name: string; value: string; color: string }
+type Props = { name: string; value: number; color: string }
 
 export function Card({ name, value, color }: Props) {
     return (

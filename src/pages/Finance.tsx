@@ -16,40 +16,53 @@ import { FilterArea } from '../components/FilterArea'
 import { LabelFilterText } from '../components/LabelsFilter'
 import { ButtonActionsPage } from '../components/Button'
 import { Modal } from '../components/Modal'
-import { BusinessEntry } from '../modal/BusinessEntry'
-import { PropsValuesBusiness, PropsGroup } from '../types'
+import {
+    PropsGroup,
+    PropsValueFinance,
+    PropsValuesBusiness,
+    PropsValuesPerson,
+} from '../types'
 import { Loading } from '../components/Loading'
-import { businessApi } from '../api/BusinessApi'
+import { financeApi } from '../api/FinanceApi'
+import { FinanceEntry } from '../modal/FinanceEntry'
+import { DateParse, ValueParse } from '../constants'
 
-export function Business() {
-    const initialData: PropsValuesBusiness = {
+export function Finance() {
+    const initialData: PropsValueFinance = {
         id: 0,
-        nameBusiness: '',
-        status: '',
-        tradeName: '',
-        businessCNPJ: '',
-        stateRegister: '',
-        postCodeBusiness: '',
-        addressBusiness: '',
-        numberAddressBusiness: '',
-        districtBusiness: '',
-        cityBusiness: '',
-        stateBusiness: '',
-        groupId: 0,
-        group: {} as PropsGroup,
+        type: '',
+        status: 0,
+        statusV: {} as PropsGroup,
+        entry: 0,
+        business: 0,
+        businessV: {} as PropsValuesBusiness,
+        person: 0,
+        personV: {} as PropsValuesPerson,
+        date: '',
+        competence: '',
+        expiration: '',
+        days: 0,
+        payout: '',
+        ammount: 0,
+        category: 0,
+        categoryV: {} as PropsGroup,
+        costCenter: 0,
+        costCenterV: {} as PropsGroup,
+        account: 0,
+        accountV: {} as PropsGroup,
+        obs: '',
     }
-
-    const [data, setData] = useState<PropsValuesBusiness[]>([])
+    const [data, setData] = useState<PropsValueFinance[]>([])
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(true)
     const [filter, setFilter] = useState('')
     const [modal, setModal] = useState(false)
-    const [modalData, setModalData] = useState<PropsValuesBusiness>(initialData)
+    const [modalData, setModalData] = useState<PropsValueFinance>(initialData)
     const [typeModal, setTypeModal] = useState('')
 
     const datavalue = async () => {
         setLoading(true)
-        const result = await businessApi.all()
+        const result = await financeApi.all()
         setData(result)
         setLoading(false)
         setRefresh(false)
@@ -70,22 +83,20 @@ export function Business() {
     }
 
     const searchData = useMemo(() => {
-        return data.filter(
-            (item: { [x: string]: { toString: () => string } }) => {
-                return searchParams.some((newItem) => {
-                    return (
-                        item[newItem].toString().toLowerCase().indexOf(filter) >
-                        -1
-                    )
-                })
-            }
-        )
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return data.filter((item: any) => {
+            return searchParams.some((newItem) => {
+                return (
+                    item[newItem].toString().toLowerCase().indexOf(filter) > -1
+                )
+            })
+        })
     }, [data, filter, searchParams])
 
     // Fim do código de pesquisa
 
     const HandleClickButtonNew = () => {
-        setTypeModal('Cadastrar Empresa')
+        setTypeModal('Cadastrar Contas')
         setModalData(initialData)
         setModal(!modal)
     }
@@ -96,18 +107,18 @@ export function Business() {
     const handleClickCloseModal = (e: { target: { id: string } }) => {
         if (e.target.id === 'modalEntry') {
             setModal(!modal)
-            localStorage.removeItem('business')
         }
     }
 
     const HandleClickEdit = (e: number) => {
-        setTypeModal('Editar Empresa')
-        setModalData(data[e])
+        const objUser = data[e]
+        setTypeModal('Editar Conta')
+        setModalData(objUser)
         setModal(!modal)
     }
 
     const HandleClickDelete = (e: number) => {
-        setTypeModal('Excluir Empresa')
+        setTypeModal('Excluir Conta')
         setModalData(data[e])
         setModal(!modal)
     }
@@ -115,15 +126,15 @@ export function Business() {
     const handleClickConfirm = () => {
         setModal(!modal)
     }
-    const inactive = data.filter((e) => e.status === 'Inativo')
-    const active = data.filter((e) => e.status === 'Ativo')
-    const atention = data.filter((e) => e.status !== 'Ativo')
+    const inactive = 0
+    const active = 0
+    const atention = 0
 
     const dash = {
-        all: { name: 'Todos', value: data.length || 0 },
-        inactive: { name: 'Inativos', value: inactive.length || 0 },
-        active: { name: 'Ativos', value: active.length || 0 },
-        atention: { name: 'Pendentes', value: atention.length || 0 },
+        all: { name: 'Total', value: 0 },
+        inactive: { name: 'Vencidos', value: inactive },
+        active: { name: 'Vence Hoje', value: active },
+        atention: { name: 'Vence Amanhã', value: atention },
     }
     return (
         <>
@@ -136,7 +147,7 @@ export function Business() {
             />
             <FilterArea>
                 <LabelFilterText
-                    id="businessSearch"
+                    id="financeSearch"
                     name="Pesquisar"
                     type="search"
                     value={filter}
@@ -155,20 +166,25 @@ export function Business() {
                     <TableHeader>
                         <TableHeaderRow>
                             <TableHeaderRowValue value="Ações" />
-                            <TableHeaderRowValue value="Código" />
+                            <TableHeaderRowValue value="Tipo" />
                             <TableHeaderRowValue value="Status" />
-                            <TableHeaderRowValue value="Razão Social" />
-                            <TableHeaderRowValue value="Fantasia" />
-                            <TableHeaderRowValue value="CNPJ" />
-                            <TableHeaderRowValue value="Endereço" />
-                            <TableHeaderRowValue value="Bairro" />
-                            <TableHeaderRowValue value="Cidade" />
-                            <TableHeaderRowValue value="UF" />
-                            <TableHeaderRowValue value="Grupo Empresarial" />
+                            <TableHeaderRowValue value="Empresa" />
+                            <TableHeaderRowValue value="Fornecedor/Cliente" />
+                            <TableHeaderRowValue value="Vencimento" />
+                            <TableHeaderRowValue value="Dias" />
+                            <TableHeaderRowValue value="Valor" />
+                            <TableHeaderRowValue value="Categoria" />
+                            <TableHeaderRowValue value="Centro de Custo" />
+                            <TableHeaderRowValue value="Conta Bancária" />
                         </TableHeaderRow>
                     </TableHeader>
                     <TableBody>
                         {searchData.map((values, index) => {
+                            const ammount = ValueParse(values.ammount)
+                            const expiration = DateParse(
+                                values.expiration,
+                                'front'
+                            )
                             return (
                                 <TableBodyRow
                                     rowId={values.id}
@@ -183,47 +199,43 @@ export function Business() {
                                     />
                                     <TableBodyRowValue
                                         key={`col01-${values.id}`}
-                                        value={values.id}
+                                        value={values.type}
                                     />
                                     <TableBodyRowValue
                                         key={`col02-${values.id}`}
-                                        value={values.status}
+                                        value={values.statusV.groupName}
                                     />
                                     <TableBodyRowValue
                                         key={`col03-${values.id}`}
-                                        value={values.nameBusiness}
+                                        value={`${values.business} - ${values.businessV.nameBusiness}`}
                                     />
                                     <TableBodyRowValue
                                         key={`col04-${values.id}`}
-                                        value={values.tradeName}
+                                        value={`${values.person} - ${values.personV.namePerson}`}
                                     />
                                     <TableBodyRowValue
                                         key={`col05-${values.id}`}
-                                        value={values.businessCNPJ}
+                                        value={expiration}
                                     />
                                     <TableBodyRowValue
                                         key={`col06-${values.id}`}
-                                        value={
-                                            values.numberAddressBusiness
-                                                ? `${values.addressBusiness},${values.numberAddressBusiness}`
-                                                : `${values.addressBusiness}`
-                                        }
+                                        value={values.days}
                                     />
                                     <TableBodyRowValue
                                         key={`col07-${values.id}`}
-                                        value={values.districtBusiness}
+                                        value={ammount}
                                     />
                                     <TableBodyRowValue
                                         key={`col08-${values.id}`}
-                                        value={values.cityBusiness}
+                                        value={values.categoryV.groupName}
                                     />
                                     <TableBodyRowValue
                                         key={`col09-${values.id}`}
-                                        value={values.stateBusiness}
+                                        value={values.costCenterV.groupName}
                                     />
                                     <TableBodyRowValue
-                                        key={`col10-${values.group.groupName}`}
-                                        value={values.group.groupName}
+                                        key={`col10-${values.id}`}
+                                        value={values.accountV.groupName}
                                     />
                                 </TableBodyRow>
                             )
@@ -236,7 +248,7 @@ export function Business() {
                     handleClickClose={handleClickCloseModal}
                     type={typeModal}
                 >
-                    <BusinessEntry
+                    <FinanceEntry
                         data={modalData}
                         type={typeModal}
                         closeModal={handleClickConfirm}
